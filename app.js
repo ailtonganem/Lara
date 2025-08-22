@@ -1,8 +1,19 @@
 // --------------------------------------------------------------------
+//  0. IMPORTAÇÃO E INICIALIZAÇÃO DO FIREBASE
+// --------------------------------------------------------------------
+
+// Importa a configuração do Firebase de um arquivo separado e seguro.
+import { firebaseConfig } from './firebase-config.js';
+
+// Inicializa o Firebase com as configurações importadas.
+firebase.initializeApp(firebaseConfig);
+
+
+// --------------------------------------------------------------------
 //  1. INICIALIZAÇÃO E REFERÊNCIAS
 // --------------------------------------------------------------------
 
-// Obtém as referências para os serviços do Firebase que já foram inicializados no index.html
+// Obtém as referências para os serviços do Firebase que acabaram de ser inicializados.
 const auth = firebase.auth();
 const db = firebase.firestore();
 
