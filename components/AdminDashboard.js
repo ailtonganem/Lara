@@ -13,6 +13,42 @@ const db = firebase.firestore();
 const appContainer = document.getElementById('app');
 
 /**
+ * Salva uma nova matéria no banco de dados do Firestore.
+ */
+const saveMateria = async () => {
+    const nome = document.getElementById('materia-nome').value;
+    const descricao = document.getElementById('materia-descricao').value;
+    const icone = document.getElementById('materia-icone').value;
+    const ordem = document.getElementById('materia-ordem').value;
+    const feedback = document.getElementById('form-feedback');
+
+    if (!nome || !descricao || !ordem) {
+        feedback.textContent = 'Por favor, preencha todos os campos obrigatórios (Nome, Descrição, Ordem).';
+        return;
+    }
+
+    const saveButton = document.getElementById('save-materia-btn');
+    saveButton.disabled = true;
+    saveButton.textContent = 'Salvando...';
+
+    try {
+        await db.collection('materias').add({
+            nome: nome,
+            descricao: descricao,
+            icone: icone,
+            ordem: Number(ordem) // Garante que a ordem seja um número
+        });
+        console.log("Matéria adicionada com sucesso!");
+        renderAdminDashboard(); // Re-renderiza o painel para mostrar a nova matéria
+    } catch (error) {
+        console.error("Erro ao adicionar matéria: ", error);
+        feedback.textContent = 'Ocorreu um erro ao salvar a matéria.';
+        saveButton.disabled = false;
+        saveButton.textContent = 'Salvar Matéria';
+    }
+};
+
+/**
  * Altera o status de um usuário para 'aprovado: true' no Firestore.
  * @param {string} userId - O ID do documento do usuário a ser aprovado.
  */
@@ -45,12 +81,32 @@ export const renderAdminDashboard = async () => {
         <div id="content-management-section">
             <h3>Matérias</h3>
             <div id="materias-list">Carregando matérias...</div>
-            <!-- Futuramente, aqui entrarão os botões para adicionar/editar -->
+            <div id="add-materia-form-container" style="margin-top: 20px;"></div>
+            <button id="add-materia-btn" style="margin-top: 10px;">+ Adicionar Nova Matéria</button>
         </div>
         <br>
         <button id="logout-button">Sair</button>
     `;
     document.getElementById('logout-button').addEventListener('click', handleLogout);
+
+    // Adiciona evento ao botão para mostrar o formulário de nova matéria
+    document.getElementById('add-materia-btn').addEventListener('click', () => {
+        const formContainer = document.getElementById('add-materia-form-container');
+        formContainer.innerHTML = `
+            <div style="border: 1px solid #ccc; padding: 15px; border-radius: 5px;">
+                <h4>Nova Matéria</h4>
+                <input type="text" id="materia-nome" placeholder="Nome da Matéria (ex: Matemática)" required>
+                <input type="text" id="materia-descricao" placeholder="Breve descrição" required>
+                <input type="text" id="materia-icone" placeholder="Nome do ícone (opcional)">
+                <input type="number" id="materia-ordem" placeholder="Ordem de exibição (ex: 1)" required>
+                <p id="form-feedback" style="color: red;"></p>
+                <button id="save-materia-btn">Salvar Matéria</button>
+                <button id="cancel-materia-btn">Cancelar</button>
+            </div>
+        `;
+        document.getElementById('save-materia-btn').addEventListener('click', saveMateria);
+        document.getElementById('cancel-materia-btn').addEventListener('click', () => formContainer.innerHTML = '');
+    });
 
     // 2. Carrega e exibe os usuários pendentes (lógica existente)
     try {
