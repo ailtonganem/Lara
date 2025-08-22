@@ -7,6 +7,8 @@
 
 // Importa a função de logout do serviço de autenticação
 import { handleLogout } from '../services/authService.js';
+// Importa a tela de gerenciamento de módulos
+import { renderModuleManagementScreen } from './ModuleManagementScreen.js';
 
 // Referências para os serviços do Firebase e o container da app
 const db = firebase.firestore();
@@ -229,6 +231,7 @@ export const renderAdminDashboard = async () => {
                     <li style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; border-bottom: 1px solid #eee; padding-bottom: 10px;">
                         <span>${materia.ordem}. ${materia.nome}</span>
                         <div>
+                            <button class="manage-modules-btn" data-id="${doc.id}" data-nome="${materia.nome}" style="margin-right: 5px;">Módulos</button>
                             <button class="edit-materia-btn" data-id="${doc.id}" style="margin-right: 5px;">Editar</button>
                             <button class="delete-materia-btn" data-id="${doc.id}">Excluir</button>
                         </div>
@@ -237,6 +240,15 @@ export const renderAdminDashboard = async () => {
             });
             materiasHtml += '</ul>';
             materiasList.innerHTML = materiasHtml;
+
+            // Adiciona eventos aos botões de ação das matérias
+            document.querySelectorAll('.manage-modules-btn').forEach(button => {
+                button.addEventListener('click', (event) => {
+                    const materiaId = event.target.dataset.id;
+                    const materiaNome = event.target.dataset.nome;
+                    renderModuleManagementScreen(materiaId, materiaNome);
+                });
+            });
             document.querySelectorAll('.edit-materia-btn').forEach(button => button.addEventListener('click', (event) => renderEditForm(event.target.dataset.id)));
             document.querySelectorAll('.delete-materia-btn').forEach(button => button.addEventListener('click', (event) => deleteMateria(event.target.dataset.id)));
         }
