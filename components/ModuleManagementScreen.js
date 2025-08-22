@@ -34,12 +34,41 @@ const saveModule = async (materiaId) => {
             descricao: descricao,
             ordem: Number(ordem)
         });
-        // Recarrega a tela para mostrar o novo módulo
         const materiaDoc = await db.collection('materias').doc(materiaId).get();
         renderModuleManagementScreen(materiaId, materiaDoc.data().nome);
     } catch (error) {
         console.error("Erro ao adicionar módulo: ", error);
         feedback.textContent = 'Ocorreu um erro ao salvar o módulo.';
+    }
+};
+
+/**
+ * Atualiza um módulo existente no Firestore.
+ * @param {string} materiaId O ID da matéria pai.
+ * @param {string} moduleId O ID do módulo a ser atualizado.
+ */
+const updateModule = async (materiaId, moduleId) => {
+    const nome = document.getElementById('module-nome-edit').value;
+    const descricao = document.getElementById('module-descricao-edit').value;
+    const ordem = document.getElementById('module-ordem-edit').value;
+    const feedback = document.getElementById('form-feedback-edit');
+
+    if (!nome || !ordem) {
+        feedback.textContent = 'Por favor, preencha os campos obrigatórios.';
+        return;
+    }
+
+    try {
+        await db.collection('materias').doc(materiaId).collection('modulos').doc(moduleId).update({
+            nome: nome,
+            descricao: descricao,
+            ordem: Number(ordem)
+        });
+        const materiaDoc = await db.collection('materias').doc(materiaId).get();
+        renderModuleManagementScreen(materiaId, materiaDoc.data().nome);
+    } catch (error) {
+        console.error("Erro ao atualizar módulo: ", error);
+        feedback.textContent = 'Ocorreu um erro ao atualizar o módulo.';
     }
 };
 
@@ -61,7 +90,39 @@ const deleteModule = async (materiaId, moduleId) => {
     }
 };
 
-// --- FUNÇÃO PRINCIPAL DE RENDERIZAÇÃO ---
+// --- FUNÇÕES DE RENDERIZAÇÃO ---
+
+/**
+ * Renderiza o formulário de edição de módulo.
+ * @param {string} materiaId O ID da matéria pai.
+ * @param {string} moduleId O ID do módulo a ser editado.
+ */
+const renderModuleEditForm = async (materiaId, moduleId) => {
+    try {
+        const doc = await db.collection('materias').doc(materiaId).collection('modulos').doc(moduleId).get();
+        if (!doc.exists) {
+            console.error("Módulo não encontrado!");
+            return;
+        }
+        const module = doc.data();
+        const formContainer = document.getElementById('add-module-form-container');
+        formContainer.innerHTML = `
+            <div style="border: 1px solid #ccc; padding: 15px; border-radius: 5px; background-color: #f9f9f9;">
+                <h4>Editando Módulo: ${module.nome}</h4>
+                <input type="text" id="module-nome-edit" value="${module.nome}" required>
+                <input type="text" id="module-descricao-edit" value="${module.descricao || ''}" placeholder="Breve descrição (opcional)">
+                <input type="number" id="module-ordem-edit" value="${module.ordem}" required>
+                <p id="form-feedback-edit" style="color: red;"></p>
+                <button id="update-module-btn">Atualizar Módulo</button>
+                <button id="cancel-module-btn">Cancelar</button>
+            </div>
+        `;
+        document.getElementById('update-module-btn').addEventListener('click', () => updateModule(materiaId, moduleId));
+        document.getElementById('cancel-module-btn').addEventListener('click', () => formContainer.innerHTML = '');
+    } catch (error) {
+        console.error("Erro ao buscar módulo para edição:", error);
+    }
+};
 
 /**
  * Renderiza a tela de gerenciamento de módulos para uma matéria específica.
@@ -123,14 +184,12 @@ export const renderModuleManagementScreen = async (materiaId, materiaNome) => {
             modulesHtml += '</ul>';
             modulesList.innerHTML = modulesHtml;
 
-            // Adiciona eventos aos botões de exclusão
+            // Adiciona eventos aos botões de ação dos módulos
+            document.querySelectorAll('.edit-module-btn').forEach(button => {
+                button.addEventListener('click', (event) => renderModuleEditForm(materiaId, event.target.dataset.id));
+            });
             document.querySelectorAll('.delete-module-btn').forEach(button => {
                 button.addEventListener('click', (event) => deleteModule(materiaId, event.target.dataset.id));
-            });
-            
-            // A funcionalidade de Editar será adicionada no próximo passo
-            document.querySelectorAll('.edit-module-btn').forEach(button => {
-                button.addEventListener('click', () => alert('Funcionalidade de edição de módulo a ser implementada.'));
             });
         }
     } catch (error) {
