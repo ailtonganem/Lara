@@ -4,8 +4,9 @@
 // Responsável por gerenciar (CRUD) os módulos de uma matéria específica.
 // ====================================================================
 
-// Importa a função de renderização do painel principal para poder "voltar"
+// Importa as funções de renderização das telas adjacentes
 import { renderAdminDashboard } from './AdminDashboard.js';
+import { renderActivityManagementScreen } from './ActivityManagementScreen.js';
 
 // Referências para os serviços do Firebase e o container da app
 const db = firebase.firestore();
@@ -175,6 +176,7 @@ export const renderModuleManagementScreen = async (materiaId, materiaNome) => {
                     <li style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; border-bottom: 1px solid #eee; padding-bottom: 10px;">
                         <span>${module.ordem}. ${module.nome}</span>
                         <div>
+                            <button class="manage-activities-btn" data-id="${doc.id}" data-nome="${module.nome}" style="margin-right: 5px;">Atividades</button>
                             <button class="edit-module-btn" data-id="${doc.id}" style="margin-right: 5px;">Editar</button>
                             <button class="delete-module-btn" data-id="${doc.id}">Excluir</button>
                         </div>
@@ -185,6 +187,13 @@ export const renderModuleManagementScreen = async (materiaId, materiaNome) => {
             modulesList.innerHTML = modulesHtml;
 
             // Adiciona eventos aos botões de ação dos módulos
+            document.querySelectorAll('.manage-activities-btn').forEach(button => {
+                button.addEventListener('click', (event) => {
+                    const moduleId = event.target.dataset.id;
+                    const moduleNome = event.target.dataset.nome;
+                    renderActivityManagementScreen(materiaId, materiaNome, moduleId, moduleNome);
+                });
+            });
             document.querySelectorAll('.edit-module-btn').forEach(button => {
                 button.addEventListener('click', (event) => renderModuleEditForm(materiaId, event.target.dataset.id));
             });
