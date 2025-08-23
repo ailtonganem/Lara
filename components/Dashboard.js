@@ -9,6 +9,8 @@
 import { handleLogout } from '../services/authService.js';
 // Importa a função para buscar as matérias do Firestore
 import { getMaterias } from '../services/firestoreService.js';
+// Importa a função para renderizar a tela de módulos
+import { renderModulesScreen } from './ModulesScreen.js';
 
 // Referência para o container principal da nossa aplicação no HTML
 const appContainer = document.getElementById('app');
@@ -41,7 +43,7 @@ export const renderDashboard = async (user) => {
     let materiasHtml = '<div class="materias-grid">';
     materias.forEach(materia => {
         materiasHtml += `
-            <div class="materia-card" data-id="${materia.id}">
+            <div class="materia-card" data-id="${materia.id}" data-nome="${materia.nome}">
                 <h3>${materia.nome}</h3>
                 <p>${materia.descricao}</p>
             </div>
@@ -51,12 +53,13 @@ export const renderDashboard = async (user) => {
 
     materiasContainer.innerHTML = materiasHtml;
 
-    // 4. Adiciona eventos de clique aos cards (serão usados no próximo passo)
+    // 4. Adiciona eventos de clique aos cards para navegar para a tela de módulos
     document.querySelectorAll('.materia-card').forEach(card => {
         card.addEventListener('click', (event) => {
             const materiaId = event.currentTarget.dataset.id;
-            // Ação futura: Chamar a tela de módulos para esta matéria
-            alert(`Você clicou na matéria com ID: ${materiaId}. A próxima tela será implementada a seguir.`);
+            const materiaNome = event.currentTarget.dataset.nome;
+            // Chama a função que renderiza a tela de módulos
+            renderModulesScreen(user, materiaId, materiaNome);
         });
     });
 };
