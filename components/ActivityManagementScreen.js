@@ -5,8 +5,9 @@
 // ====================================================================
 
 import { renderModuleManagementScreen } from './ModuleManagementScreen.js';
+// Importa a instância do Firestore do nosso serviço central
+import { db } from '../services/firebaseService.js';
 
-const db = firebase.firestore();
 const appContainer = document.getElementById('app');
 
 // --- FUNÇÕES DE LÓGICA (CRUD Atividades) ---
