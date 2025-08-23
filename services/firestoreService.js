@@ -52,3 +52,27 @@ export const getModulos = async (materiaId) => {
         return [];
     }
 };
+
+/**
+ * Busca todas as atividades de um módulo específico.
+ * @param {string} materiaId O ID da matéria pai.
+ * @param {string} moduleId O ID do módulo pai.
+ * @returns {Promise<Array>} Uma promessa que resolve para um array de objetos de atividades.
+ */
+export const getAtividades = async (materiaId, moduleId) => {
+    try {
+        const querySnapshot = await db.collection('materias').doc(materiaId).collection('modulos').doc(moduleId).collection('atividades').orderBy('ordem').get();
+        if (querySnapshot.empty) {
+            return [];
+        }
+        // Mapeia os documentos para incluir o ID e os dados de cada atividade
+        const atividades = querySnapshot.docs.map(doc => ({
+            id: doc.id,
+            ...doc.data()
+        }));
+        return atividades;
+    } catch (error) {
+        console.error("Erro ao buscar atividades:", error);
+        return [];
+    }
+};
