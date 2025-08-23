@@ -5,7 +5,9 @@
 // do ponto de vista do aluno (leitura de conteúdo).
 // ====================================================================
 
-const db = firebase.firestore();
+// Importa a instância do Firestore do nosso serviço central.
+// Isso garante que o Firebase já foi inicializado.
+import { db } from './firebaseService.js';
 
 /**
  * Busca todas as matérias cadastradas no banco de dados.
