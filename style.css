@@ -65,7 +65,7 @@ input {
 }
 
 .materia-card {
-    background-color: #e8f0fe; /* Azul claro para o card */
+    background-color: #e8f0fe;
     padding: 20px;
     border-radius: 10px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
@@ -132,6 +132,99 @@ input {
     color: #6c757d;
 }
 
+/* Estilos para a Tela de Atividades */
+.breadcrumbs {
+    text-align: left;
+    margin-bottom: 20px;
+    color: #6c757d;
+}
+
+.breadcrumbs #back-to-modules-btn {
+    color: #1a73e8;
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.activities-layout {
+    display: flex;
+    gap: 20px;
+    text-align: left;
+}
+
+.activities-sidebar {
+    width: 35%;
+    border-right: 1px solid #dee2e6;
+    padding-right: 20px;
+}
+
+.activities-sidebar ul {
+    list-style: none;
+    padding: 0;
+}
+
+.activity-item {
+    padding: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-bottom: 5px;
+    transition: background-color 0.2s;
+}
+
+.activity-item:hover {
+    background-color: #f1f3f5;
+}
+
+.activity-item.active {
+    background-color: #1a73e8;
+    color: white;
+    font-weight: bold;
+}
+
+.activity-type-icon {
+    margin-right: 8px;
+}
+
+.activity-main-content {
+    width: 65%;
+}
+
+.activity-text-content {
+    line-height: 1.6;
+    white-space: pre-wrap; /* Preserva quebras de linha e espaços */
+}
+
+/* Estilos do Quiz */
+.quiz-question {
+    margin-bottom: 20px;
+    padding: 10px;
+    border-radius: 5px;
+    transition: border 0.3s;
+}
+
+.quiz-options {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.quiz-option {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.2s, border-color 0.2s;
+}
+
+.quiz-option:hover {
+    background-color: #f8f9fa;
+}
+
+.quiz-option.selected {
+    background-color: #e8f0fe;
+    border-color: #1a73e8;
+    font-weight: bold;
+}
 
 /* Estilo para a linha divisória no Admin Dashboard */
 hr {
