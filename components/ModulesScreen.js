@@ -1,11 +1,13 @@
 // ====================================================================
-// COMPONENTE: TELA DE MÓDULOS
+// COMPONENTE: TELA DE MÓDulos
 // ====================================================================
 // Responsável por exibir os módulos de uma matéria específica.
 // ====================================================================
 
 import { getModulos } from '../services/firestoreService.js';
 import { renderDashboard } from './Dashboard.js';
+// Importa a função para renderizar a tela de atividades
+import { renderActivitiesScreen } from './ActivitiesScreen.js';
 
 const appContainer = document.getElementById('app');
 
@@ -39,7 +41,7 @@ export const renderModulesScreen = async (user, materiaId, materiaNome) => {
     let modulosHtml = '<ul class="modulos-list">';
     modulos.forEach(modulo => {
         modulosHtml += `
-            <li class="modulo-item" data-id="${modulo.id}">
+            <li class="modulo-item" data-id="${modulo.id}" data-nome="${modulo.nome}">
                 <span class="modulo-ordem">${modulo.ordem}</span>
                 <div class="modulo-info">
                     <h3>${modulo.nome}</h3>
@@ -52,12 +54,13 @@ export const renderModulesScreen = async (user, materiaId, materiaNome) => {
 
     modulosContainer.innerHTML = modulosHtml;
 
-    // 4. Adiciona eventos de clique aos itens da lista
+    // 4. Adiciona eventos de clique aos itens da lista para navegar para a tela de atividades
     document.querySelectorAll('.modulo-item').forEach(item => {
         item.addEventListener('click', (event) => {
             const moduloId = event.currentTarget.dataset.id;
-            // Ação futura: Chamar a tela de atividades para este módulo
-            alert(`Você clicou no módulo com ID: ${moduloId}. A próxima tela será implementada a seguir.`);
+            const moduloNome = event.currentTarget.dataset.nome;
+            // Chama a função que renderiza a tela de atividades
+            renderActivitiesScreen(user, materiaId, materiaNome, moduloId, moduloNome);
         });
     });
 };
