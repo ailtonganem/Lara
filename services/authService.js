@@ -5,9 +5,8 @@
 // e a lógica de login, registro e logout.
 // ====================================================================
 
-// Obtém as referências para os serviços do Firebase
-const auth = firebase.auth();
-const db = firebase.firestore();
+// Importa as instâncias de Auth e Firestore do nosso serviço central.
+import { auth, db } from './firebaseService.js';
 
 /**
  * Tenta realizar o login do usuário com e-mail e senha.
