@@ -9,21 +9,15 @@
 //  1. IMPORTAÇÕES E INICIALIZAÇÃO
 // --------------------------------------------------------------------
 
-// Importa a configuração do Firebase de um arquivo separado e seguro.
-import { firebaseConfig } from './firebase-config.js';
+// IMPORTANTE: Importa os serviços do Firebase primeiro para garantir a inicialização.
+// Este arquivo agora é o ponto central que inicializa o app e exporta as instâncias.
+import { auth, db } from './services/firebaseService.js';
 
 // Importa os componentes de tela
 import { renderLoginScreen } from './components/LoginScreen.js';
 import { renderWaitingForApprovalScreen } from './components/WaitingScreen.js';
 import { renderDashboard } from './components/Dashboard.js';
 import { renderAdminDashboard } from './components/AdminDashboard.js';
-
-// Inicializa o Firebase com as configurações importadas.
-firebase.initializeApp(firebaseConfig);
-
-// Obtém as referências para os serviços do Firebase.
-const auth = firebase.auth();
-const db = firebase.firestore();
 
 
 // --------------------------------------------------------------------
