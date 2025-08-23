@@ -199,7 +199,8 @@ export const renderAdminDashboard = async () => {
 
     // Carrega usuários pendentes
     try {
-        const usersQuery = await db.collection('users').where('aprovado', '==', false).get();
+        // ===== LINHA ALTERADA =====
+        const usersQuery = await db.collection('users').where('aprovado', '==', false).where('perfil', '==', 'aluno').get();
         const pendingUsersList = document.getElementById('pending-users-list');
         if (usersQuery.empty) {
             pendingUsersList.innerHTML = '<p>Nenhum usuário pendente no momento.</p>';
