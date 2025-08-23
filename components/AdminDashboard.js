@@ -9,9 +9,10 @@
 import { handleLogout } from '../services/authService.js';
 // Importa a tela de gerenciamento de módulos
 import { renderModuleManagementScreen } from './ModuleManagementScreen.js';
+// Importa a instância do Firestore do nosso serviço central
+import { db } from '../services/firebaseService.js';
 
-// Referências para os serviços do Firebase e o container da app
-const db = firebase.firestore();
+// Referência para o container da app
 const appContainer = document.getElementById('app');
 
 // --- FUNÇÕES DE LÓGICA (CRUD Matérias) ---
